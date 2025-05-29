@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext'; // Importez useAuth aussi
 import LoginScreen from './components/LoginScreen';
+import RegisterScreen from './components/RegisterScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Importez vos composants de page
@@ -15,8 +16,7 @@ import IncidentsPage from './pages/IncidentsPage';
 import MaintenancePage from './pages/MaintenancePage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
-import Unauthorized from './pages/Unauthorized'; // Page pour accès non autorisé
-import NotFound from './pages/NotFound'; // Page 404
+
 
 function AppContent() {
   const { loading } = useAuth(); // Accédez à l'état de chargement du contexte
@@ -35,8 +35,8 @@ function AppContent() {
     <Routes>
       {/* Route de connexion - Non protégée, sans layout */}
       <Route path="/login" element={<LoginScreen />} />
-      {/* Route pour accès non autorisé */}
-      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/register" element={<RegisterScreen />} />
+
 
       {/* Routes protégées - Enveloppées par ProtectedRoute et DashboardLayout */}
       {/* Le DashboardLayout est rendu par ProtectedRoute */}
@@ -56,8 +56,7 @@ function AppContent() {
         <Route path="/reports/*" element={<ReportsPage />} />
       </Route>
 
-      {/* Route 404 - Pour toutes les autres routes non définies */}
-      <Route path="*" element={<NotFound />} />
+    
     </Routes>
   );
 }

@@ -1,9 +1,11 @@
 import React from 'react';
 import Card from '../components/Card'; // Import du composant Card
+import DashboardLayout from '../components/DashboardLayout';
 
 const DashboardPage = () => {
   return (
     <div>
+      <DashboardLayout/>
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900">Tableau de Bord</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

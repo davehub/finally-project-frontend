@@ -1,25 +1,29 @@
-// src/components/Navbar.js
+// src/components/Navbar.js (Mise à jour partielle)
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Link, useLocation } from 'react-router-dom'; // Importez useLocation
 import { ComputerDesktopIcon, UserGroupIcon, Cog6ToothIcon, ChartBarIcon, PowerIcon, HomeIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation(); // Obtenez l'objet location actuel
 
   const getMenuItems = () => {
     if (!isAuthenticated) return [];
 
     const items = [
       { name: 'Tableau de bord', path: '/dashboard', icon: <HomeIcon className="h-5 w-5 mr-2" /> },
-      { name: 'Gestion du Parc', path: '/assets', icon: <ComputerDesktopIcon className="h-5 w-5 mr-2" /> },
-      { name: 'Support', path: '/support', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> },
+      { name: 'Équipements', path: '/equipments', icon: <ComputerDesktopIcon className="h-5 w-5 mr-2" /> },
+      { name: 'Logiciels', path: '/software', icon: <ComputerDesktopIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
+      { name: 'Incidents', path: '/incidents', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
+      { name: 'Maintenance', path: '/maintenance', icon: <Cog6ToothIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
+      { name: 'Rapports', path: '/reports', icon: <ChartBarIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
     ];
 
     if (user?.role === 'admin') {
       items.push(
-        { name: 'Administration', path: '/admin', icon: <Cog6ToothIcon className="h-5 w-5 mr-2" /> },
-        { name: 'Rapports', path: '/reports', icon: <ChartBarIcon className="h-5 w-5 mr-2" /> }
+        { name: 'Utilisateurs', path: '/users', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
+        { name: 'Paramètres', path: '/settings', icon: <Cog6ToothIcon className="h-5 w-5 mr-2" /> } // Icône à adapter
       );
     }
     return items;
@@ -35,7 +39,13 @@ const Navbar = () => {
           <ul className="flex space-x-6">
             {getMenuItems().map((item) => (
               <li key={item.name}>
-                <Link to={item.path} className="flex items-center hover:text-indigo-400 transition-colors duration-200">
+                <Link
+                  to={item.path}
+                  // Appliquez une classe 'active' si le chemin correspond
+                  className={`flex items-center hover:text-indigo-400 transition-colors duration-200 ${
+                    location.pathname.startsWith(item.path) ? 'text-indigo-400 font-semibold' : ''
+                  }`}
+                >
                   {item.icon}
                   {item.name}
                 </Link>

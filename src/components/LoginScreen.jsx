@@ -1,8 +1,8 @@
-// src/components/LoginScreen.js
+// src/components/LoginScreen.js (Mise à jour pour le lien d'enregistrement)
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'; // Exemple d'icône
+import { useNavigate, Link } from 'react-router-dom'; // Importez Link
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -16,9 +16,9 @@ const LoginScreen = () => {
     setError('');
     try {
       await login(username, password);
-      navigate('/dashboard'); // Redirige après une connexion réussie
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Erreur de connexion');
+      setError(err.message);
     }
   };
 
@@ -66,6 +66,8 @@ const LoginScreen = () => {
             </button>
           </div>
           <p className="text-center text-sm text-gray-600 mt-4">
+            <Link to="/register" className="text-indigo-600 hover:underline">S'inscrire</Link>
+            {' | '}
             <a href="#" className="text-indigo-600 hover:underline">Mot de passe oublié ?</a>
           </p>
         </form>
