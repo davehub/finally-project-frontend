@@ -2,26 +2,26 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import Navbar from './Navbar'; // Incluez votre Navbar ici
+// import Navbar from './Navbar'; // La Navbar est maintenant dans DashboardLayout
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
+    // Si non authentifié, redirige vers la page de connexion
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(user?.role)) {
-    // Si l'utilisateur n'a pas le rôle requis, redirigez-le ou affichez un message
-    return <Navigate to="/unauthorized" replace />; // Créez une page /unauthorized
+    // Si authentifié mais rôle non autorisé, redirige vers la page d'accès refusé
+    return <Navigate to="/unauthorized" replace />;
   }
 
+  // Si authentifié et autorisé, rend le composant de layout (DashboardLayout)
+  // et lui passe l'Outlet comme enfant pour rendre la page spécifique
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow p-4">
-        <Outlet /> {/* Rend le composant enfant de la route protégée */}
-      </main>
+    <div>
+      <Outlet />
     </div>
   );
 };
