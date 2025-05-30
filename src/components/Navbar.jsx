@@ -14,7 +14,7 @@ const Navbar = () => {
     const items = [
       { name: 'Tableau de bord', path: '/dashboard', icon: <HomeIcon className="h-5 w-5 mr-2" /> },
 
-      {name: 'Utilisateurs', path: '/users', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
+      {name: 'Utilisateurs', path: '/users', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> },
       { name: 'Équipements', path: '/equipments', icon: <ComputerDesktopIcon className="h-5 w-5 mr-2" /> },
       { name: 'Logiciels', path: '/software', icon: <ComputerDesktopIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
       { name: 'Incidents', path: '/incidents', icon: <UserGroupIcon className="h-5 w-5 mr-2" /> }, // Icône à adapter
