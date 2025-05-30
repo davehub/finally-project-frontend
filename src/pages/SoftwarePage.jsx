@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from '../components/Table';
 import Modal from '../components/Modal';
 import FormInput from '../components/FormInput';
+import Navbar from '../components/Navbar';
 
 const SoftwarePage = () => {
   const [softwareList, setSoftwareList] = useState([]);
@@ -113,6 +114,7 @@ const SoftwarePage = () => {
 
   return (
     <div>
+      <Navbar />
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900">Gestion des Logiciels & Licences</h1>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">

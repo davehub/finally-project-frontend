@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from '../components/Table';       // Import du composant Table
 import Modal from '../components/Modal';       // Import du composant Modal
 import FormInput from '../components/FormInput'; // Import du composant FormInput
+import Navbar from '../components/Navbar';     // Import du composant Navbar
 
 const EquipmentsPage = () => {
   const [equipments, setEquipments] = useState([]);
@@ -110,6 +111,7 @@ const EquipmentsPage = () => {
 
   return (
     <div>
+      <Navbar /> {/* Assurez-vous d'avoir un composant Navbar importé */}
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900">Gestion du Matériel Informatique</h1>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">

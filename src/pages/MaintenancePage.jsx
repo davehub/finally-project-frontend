@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from '../components/Table';
 import Modal from '../components/Modal';
 import FormInput from '../components/FormInput';
+import Navbar from '../components/Navbar';
 
 const MaintenancePage = () => {
   const [maintenances, setMaintenances] = useState([]);
@@ -117,6 +118,7 @@ const MaintenancePage = () => {
 
   return (
     <div>
+      <Navbar />
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900">Planification & Suivi des Maintenances</h1>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">

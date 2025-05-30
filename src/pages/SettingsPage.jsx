@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormInput from '../components/FormInput'; // Import du composant FormInput
+import Navbar from '../components/Navbar';
 
 const SettingsPage = () => {
   const [appName, setAppName] = useState('Gestion Parc Info');
@@ -17,6 +18,7 @@ const SettingsPage = () => {
 
   return (
     <div>
+      <Navbar />
       <h1 className="text-4xl font-extrabold mb-8 text-gray-900">Paramètres</h1>
 
       <div className="bg-white p-8 rounded-xl shadow-lg">
