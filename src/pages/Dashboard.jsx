@@ -76,6 +76,7 @@ const Dashboard = () => {
             </p>
             <div className="mt-4 h-48 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500">
               [Espace réservé pour le graphique]
+              
             </div>
           </Card>
         </>
