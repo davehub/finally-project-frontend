@@ -8,6 +8,7 @@ import UserManagement from './pages/UserManagement';
 import MaterialManagement from './pages/MaterialManagement';
 import CategoryManagement from './pages/CategoryManagement';
 import RoleManagement from './pages/RoleManagement';
+import Button from './components/common/Button'; // Composant de bouton réutilisable
 import Login from './pages/Login'; // Nouvelle page de connexion
 import Register from './pages/Register'; // Nouvelle page d'inscription
 import { AuthProvider, useAuth } from './context/AuthContext'; // Contexte d'authentification

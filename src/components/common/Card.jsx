@@ -2,7 +2,7 @@
 import React from 'react';
 
 /**
- * Composant Card réutilisable.
+ * Composant Card réutilisable avec un design moderne.
  * @param {object} props - Propriétés du composant.
  * @param {React.ReactNode} props.children - Le contenu à afficher dans la carte.
  * @param {string} [props.className=''] - Classes Tailwind CSS supplémentaires pour la carte.
@@ -11,9 +11,12 @@ import React from 'react';
  */
 const Card = ({ children, className = '', title = '', titleClassName = '', ...props }) => {
   return (
-    <div className={`bg-white rounded-lg shadow-md p-6 ${className}`} {...props}>
+    <div
+      className={`bg-white rounded-xl shadow-lg border border-gray-200 p-6 transition-transform transform hover:scale-105 hover:shadow-xl ${className}`}
+      {...props}
+    >
       {title && (
-        <h2 className={`text-xl font-semibold text-gray-800 mb-4 ${titleClassName}`}>
+        <h2 className={`text-2xl font-bold text-gray-900 mb-4 ${titleClassName}`}>
           {title}
         </h2>
       )}
