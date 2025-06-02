@@ -1,67 +1,106 @@
-// src/App.js
-import React from 'react';
+// src/App.jsx
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext'; // Importez useAuth aussi
-import LoginScreen from './components/LoginScreen';
-import RegisterScreen from './components/RegisterScreen';
-import ProtectedRoute from './components/ProtectedRoute';
+import Sidebar from './components/layout/Sidebar';
+import Navbar from './components/layout/Navbar';
+import Dashboard from './pages/Dashboard';
+import UserManagement from './pages/UserManagement';
+import MaterialManagement from './pages/MaterialManagement';
+import CategoryManagement from './pages/CategoryManagement';
+import RoleManagement from './pages/RoleManagement';
+import Login from './pages/Login'; // Nouvelle page de connexion
+import Register from './pages/Register'; // Nouvelle page d'inscription
+import { AuthProvider, useAuth } from './context/AuthContext'; // Contexte d'authentification
 
-// Importez vos composants de page
-import DashboardLayout from './components/DashboardLayout';
-import DashboardPage from './pages/DashboardPage';
-import EquipmentsPage from './pages/EquipmentsPage';
-import SoftwarePage from './pages/SoftwarePage';
-import UsersPage from './pages/UsersPage';
-import IncidentsPage from './pages/IncidentsPage';
-import MaintenancePage from './pages/MaintenancePage';
-import ReportsPage from './pages/ReportsPage';
-import SettingsPage from './pages/SettingsPage';
-
-
-function AppContent() {
-  const { loading } = useAuth(); // Accédez à l'état de chargement du contexte
+// Composant de route protégée
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { currentUser, userRole, loading } = useAuth();
 
   if (loading) {
-    // Affichez un indicateur de chargement pendant la vérification initiale de l'authentification
+    // Afficher un indicateur de chargement pendant la vérification de l'authentification
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
-        <p className="ml-4 text-gray-700">Chargement de l'application...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg font-semibold text-gray-700">Chargement...</div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    // Rediriger vers la page de connexion si non authentifié
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    // Rediriger vers le tableau de bord ou une page d'accès refusé si le rôle n'est pas autorisé
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-2xl font-bold mb-4 text-red-600">Accès refusé</h2>
+        <p className="text-gray-700">Vous n'avez pas les permissions pour accéder à cette page.</p>
+        <Button onClick={() => window.location.href = '/'}>Retour au Tableau de bord</Button>
+      </div>
+    );
+  }
+
+  return children;
+};
+
+const AppContent = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { currentUser, loading } = useAuth();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg font-semibold text-gray-700">Chargement de l'application...</div>
       </div>
     );
   }
 
   return (
-    <Routes>
-      {/* Route de connexion - Non protégée, sans layout */}
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="/register" element={<RegisterScreen />} />
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Afficher la barre latérale uniquement si l'utilisateur est connecté */}
+      {currentUser && <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />}
 
+      {/* Zone de contenu principale */}
+      <div className={`flex-1 flex flex-col ${currentUser ? 'lg:ml-64' : ''}`}> {/* Ajuster ml-64 pour correspondre à la largeur de la barre latérale */}
+        {/* Barre de navigation */}
+        <Navbar onMenuClick={toggleSidebar} />
 
-      {/* Routes protégées - Enveloppées par ProtectedRoute et DashboardLayout */}
-      {/* Le DashboardLayout est rendu par ProtectedRoute */}
-      <Route element={<ProtectedRoute component={DashboardLayout} />}>
-        {/* Route par défaut après connexion */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/equipments/*" element={<EquipmentsPage />} />
-        <Route path="/software/*" element={<SoftwarePage />} />
-        {/* Routes nécessitant un rôle spécifique (ex: admin) */}
-        <Route element={<ProtectedRoute component={DashboardLayout} allowedRoles={['admin']} />}>
-          <Route path="/users/*" element={<UsersPage />} />
-          <Route path="/settings/*" element={<SettingsPage />} />
-        </Route>
-        <Route path="/incidents/*" element={<IncidentsPage />} />
-        <Route path="/maintenance/*" element={<MaintenancePage />} />
-        <Route path="/reports/*" element={<ReportsPage />} />
-      </Route>
+        {/* Contenu de la page */}
+        <main className="flex-1 overflow-y-auto p-4">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-    
-    </Routes>
+            {/* Routes protégées */}
+            <Route path="/" element={<ProtectedRoute allowedRoles={['user', 'admin']}><Dashboard /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><UserManagement /></ProtectedRoute>} />
+            <Route path="/materials" element={<ProtectedRoute allowedRoles={['user', 'admin']}><MaterialManagement /></ProtectedRoute>} />
+            <Route path="/categories" element={<ProtectedRoute allowedRoles={['user', 'admin']}><CategoryManagement /></ProtectedRoute>} />
+            <Route path="/roles" element={<ProtectedRoute allowedRoles={['admin']}><RoleManagement /></ProtectedRoute>} />
+
+            {/* Route de secours pour les chemins non trouvés */}
+            <Route path="*" element={
+              <div className="p-6 text-center text-gray-600">
+                <h2 className="text-2xl font-bold mb-4">404 - Page non trouvée</h2>
+                <p>La page que vous recherchez n'existe pas.</p>
+                <Button onClick={() => window.location.href = currentUser ? '/' : '/login'} className="mt-4">
+                  {currentUser ? 'Retour au Tableau de bord' : 'Retour à la connexion'}
+                </Button>
+              </div>
+            } />
+          </Routes>
+        </main>
+      </div>
+    </div>
   );
-}
+};
 
-function App() {
+const App = () => {
   return (
     <Router>
       <AuthProvider>
@@ -69,6 +108,6 @@ function App() {
       </AuthProvider>
     </Router>
   );
-}
+};
 
 export default App;
