@@ -4,10 +4,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css'; // Importer le CSS global (y compris Tailwind)
 
-// Importer les modules Firebase nécessaires
-// import * as firebase from 'firebase/app'; // Non utilisé si Firebase est retiré
-// import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from 'firebase/auth'; // Non utilisé
-// import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'; // Non utilisé
 
 // Assurez-vous que l'élément racine existe avant le rendu
 const rootElement = document.getElementById('root');
