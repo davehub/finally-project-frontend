@@ -1,4 +1,3 @@
-// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -17,10 +16,7 @@ if (rootElement) {
   console.error('L\'élément racine avec l\'ID "root" est introuvable dans le document.');
 }
 
-// Ajouter le CDN Tailwind CSS pour des tests rapides dans des environnements sans outils de construction
-// Dans un vrai projet, vous utiliseriez un processus de construction (par exemple, Vite, Create React App)
-// pour compiler Tailwind CSS.
-// Dans le but de cet exemple autonome, nous incluons le CDN.
+
 const tailwindScript = document.createElement('script');
 tailwindScript.src = 'https://cdn.tailwindcss.com';
 document.head.appendChild(tailwindScript);

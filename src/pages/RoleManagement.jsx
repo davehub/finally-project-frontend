@@ -1,4 +1,3 @@
-// src/pages/RoleManagement.jsx
 import React, { useState } from "react";
 import Table from "../components/common/Table";
 import Button from "../components/common/Button";

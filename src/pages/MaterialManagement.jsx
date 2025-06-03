@@ -1,4 +1,3 @@
-// src/pages/MaterialManagement.jsx
 import React, { useState } from 'react';
 import Table from '../components/common/Table';
 import Button from '../components/common/Button';
@@ -74,7 +73,7 @@ const MaterialManagement = () => {
   };
 
   const handleDeleteMaterial = (id) => {
-    // Remplacer window.confirm par un composant de modale personnalisé si l'application est en production
+   
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce matériau ?')) {
       setMaterials(materials.filter((material) => material.id !== id));
     }

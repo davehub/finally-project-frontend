@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Créer le contexte d'authentification
@@ -113,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     register,
     login,
     logout,
-    // db et appId ne sont plus nécessaires sans Firebase
+    
   };
 
   return (

@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React from 'react';
 import Card from '../components/common/Card';
 import { useAuth } from '../context/AuthContext';
