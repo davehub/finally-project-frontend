@@ -101,15 +101,6 @@ const Register = () => {
             {loading ? "Inscription en cours..." : "S'inscrire"}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Vous avez déjà un compte ?{" "}
-          <a
-            href="/login"
-            className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
-          >
-            Connectez-vous ici
-          </a>
-        </p>
       </Card>
     </div>
   );

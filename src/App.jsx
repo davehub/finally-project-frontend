@@ -73,7 +73,8 @@ const AppContent = () => {
         {/* Contenu de la page */}
         <main className="flex-1 overflow-y-auto p-4">
           <Routes>
-            <Route path="/login" element={<Login />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+            
             <Route path="/register" element={<Register />} />
 
             {/* Routes protégées */}
@@ -88,7 +89,7 @@ const AppContent = () => {
               <div className="p-6 text-center text-gray-600">
                 <h2 className="text-2xl font-bold mb-4">404 - Page non trouvée</h2>
                 <p>La page que vous recherchez n'existe pas.</p>
-                <Button onClick={() => window.location.href = currentUser ? '/' : '/login'} className="mt-4">
+                <Button onClick={() => window.location.href = currentUser ? '/' : '/register'} className="mt-4">
                   {currentUser ? 'Retour au Tableau de bord' : 'Retour à la connexion'}
                 </Button>
               </div>
