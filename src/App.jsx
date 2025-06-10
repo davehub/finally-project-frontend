@@ -1,112 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './components/layout/Sidebar';
-import Navbar from './components/layout/Navbar';
-import Dashboard from './pages/Dashboard';
-import UserManagement from './pages/UserManagement';
-import MaterialManagement from './pages/MaterialManagement';
-import CategoryManagement from './pages/CategoryManagement';
-import RoleManagement from './pages/RoleManagement';
-import Button from './components/common/Button'; // Composant de bouton réutilisable
-import Login from './pages/Login'; // Nouvelle page de connexion
-import Register from './pages/Register'; // Nouvelle page d'inscription
-import { AuthProvider, useAuth } from './context/AuthContext'; // Contexte d'authentification
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/Auth/LoginPage';
+import RegisterPage from './pages/Auth/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 
-// Composant de route protégée
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { currentUser, userRole, loading } = useAuth();
+import DeviceListPage from './pages/Devices/DeviceListPage';
+import AddDevicePage from './pages/Devices/AddDevicePage';
 
-  if (loading) {
-    // Afficher un indicateur de chargement pendant la vérification de l'authentification
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg font-semibold text-gray-700">Chargement...</div>
-      </div>
-    );
-  }
+import MaintenanceListPage from './pages/Maintenance/MaintenanceListPage';
+import AddMaintenancePage from './pages/Maintenance/AddMaintenancePage';
 
-  if (!currentUser) {
-    // Rediriger vers la page de connexion si non authentifié
-    return <Navigate to="/login" replace />;
-  }
+import EmergencyListPage from './pages/Emergency/EmergencyListPage';
+import AddEmergencyPage from './pages/Emergency/AddEmergencyPage';
 
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    // Rediriger vers le tableau de bord ou une page d'accès refusé si le rôle n'est pas autorisé
-    return (
-      <div className="p-6 text-center">
-        <h2 className="text-2xl font-bold mb-4 text-red-600">Accès refusé</h2>
-        <p className="text-gray-700">Vous n'avez pas les permissions pour accéder à cette page.</p>
-        <Button onClick={() => window.location.href = '/'}>Retour au Tableau de bord</Button>
-      </div>
-    );
-  }
+import UserListPage from './pages/Users/UserListPage';
+import EditUserPage from './pages/Users/EditUserPage';
 
-  return children;
-};
+import './App.css';
 
-const AppContent = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentUser, loading } = useAuth();
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg font-semibold text-gray-700">Chargement de l'application...</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Afficher la barre latérale uniquement si l'utilisateur est connecté */}
-      {currentUser && <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />}
-
-      {/* Zone de contenu principale */}
-      <div className={`flex-1 flex flex-col ${currentUser ? 'lg:ml-64' : ''}`}> {/* Ajuster ml-64 pour correspondre à la largeur de la barre latérale */}
-        {/* Barre de navigation */}
-        <Navbar onMenuClick={toggleSidebar} />
-
-        {/* Contenu de la page */}
-        <main className="flex-1 overflow-y-auto p-4">
-          <Routes>
-            {/* <Route path="/login" element={<Login />} /> */}
-            
-            <Route path="/register" element={<Register />} />
-
-            {/* Routes protégées */}
-            <Route path="/" element={<ProtectedRoute allowedRoles={['user', 'admin']}><Dashboard /></ProtectedRoute>} />
-            <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><UserManagement /></ProtectedRoute>} />
-            <Route path="/materials" element={<ProtectedRoute allowedRoles={['user', 'admin']}><MaterialManagement /></ProtectedRoute>} />
-            <Route path="/categories" element={<ProtectedRoute allowedRoles={['user', 'admin']}><CategoryManagement /></ProtectedRoute>} />
-            <Route path="/roles" element={<ProtectedRoute allowedRoles={['admin']}><RoleManagement /></ProtectedRoute>} />
-
-            {/* Route de secours pour les chemins non trouvés */}
-            <Route path="*" element={
-              <div className="p-6 text-center text-gray-600">
-                <h2 className="text-2xl font-bold mb-4">404 - Page non trouvée</h2>
-                <p>La page que vous recherchez n'existe pas.</p>
-                <Button onClick={() => window.location.href = currentUser ? '/' : '/register'} className="mt-4">
-                  {currentUser ? 'Retour au Tableau de bord' : 'Retour à la connexion'}
-                </Button>
-              </div>
-            } />
-          </Routes>
-        </main>
-      </div>
-    </div>
-  );
-};
+// Simule une base de données simple en mémoire
+const mockUsers = [
+  { id: 1, email: 'admin@example.com', password: 'admin123', role: 'admin' },
+  { id: 2, email: 'tech@example.com', password: 'tech123', role: 'technician' },
+  { id: 3, email: 'user@example.com', password: 'user123', role: 'user' },
+];
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Au chargement, vérifie si l'utilisateur est déjà connecté
+  useEffect(() => {
+    const user = sessionStorage.getItem('currentUser');
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
+
+  const login = (email, password) => {
+    const user = mockUsers.find(u => u.email === email && u.password === password);
+    if (user) {
+      const { password: _unused, ...userWithoutPassword } = user; // Ne stocke pas le mot de passe
+      setCurrentUser(userWithoutPassword);
+      sessionStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+      return true;
+    }
+    return false;
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    sessionStorage.removeItem('currentUser');
+  };
+
+  // Composant de route privée simplifié
+  const PrivateRoute = ({ children, roles }) => {
+    if (!currentUser) return <Navigate to="/login" />;
+    if (roles && !roles.includes(currentUser.role)) return <Navigate to="/" />;
+    return children;
+  };
+
   return (
     <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <Navbar currentUser={currentUser} logout={logout} />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<HomePage currentUser={currentUser} />} />
+          <Route path="/login" element={currentUser ? <Navigate to="/" /> : <LoginPage login={login} />} />
+          
+          <Route 
+            path="/register" 
+            element={
+              <PrivateRoute roles={['admin']}>
+                <RegisterPage users={mockUsers} />
+              </PrivateRoute>
+            } 
+          />
+
+          <Route 
+  path="/dashboard" 
+  element={
+    <PrivateRoute currentUser={currentUser}>
+      <DashboardPage currentUser={currentUser} />
+    </PrivateRoute>
+  }
+/>
+
+          {/* Routes pour les Utilisateurs */}
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute roles={['admin', 'technician']}>
+                <UserListPage users={mockUsers} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/users/edit/:id"
+            element={
+              <PrivateRoute roles={['admin']}>
+                <EditUserPage users={mockUsers} />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Routes pour les Équipements */}
+          <Route
+            path="/devices"
+            element={
+              <PrivateRoute>
+                <DeviceListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route 
+  path="/devices/add"
+  element={
+    <PrivateRoute currentUser={currentUser} roles={['admin', 'technician']}>
+      <AddDevicePage currentUser={currentUser} />
+    </PrivateRoute>
+  }
+/>
+
+          {/* Routes pour la Maintenance */}
+          <Route
+            path="/maintenances"
+            element={
+              <PrivateRoute>
+                <MaintenanceListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/maintenances/add"
+            element={
+              <PrivateRoute roles={['admin', 'technician']}>
+                <AddMaintenancePage />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Routes pour les Urgences */}
+          <Route
+            path="/emergencies"
+            element={
+              <PrivateRoute>
+                <EmergencyListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/emergencies/add"
+            element={
+              <PrivateRoute>
+                <AddEmergencyPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route path="*" element={<div>404 - Page non trouvée</div>} />
+        </Routes>
+      </div>
     </Router>
   );
 };
